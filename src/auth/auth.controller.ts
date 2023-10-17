@@ -9,9 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Routes, Services } from '../utils/constants';
-import { IAuthService } from './interface.auth';
+import { IAuthService } from './auth.interface';
 import { CerateUserDto } from './dto/create-user.dto';
-import { IUserService } from 'src/users/interface.user';
+import { IUserService } from 'src/users/user.interface';
 import { instanceToPlain } from 'class-transformer';
 import { AuthenticateGuard, LocalAuthGuard } from './roles.guard';
 import { Request, Response } from 'express';
@@ -43,7 +43,6 @@ export class AuthController {
   @Get('currentUser')
   @UseGuards(AuthenticateGuard)
   status(@Req() req: Request, @Res() res: Response) {
-    console.log(req.user);
     return res.send({ data: instanceToPlain(req.user) });
   }
 

@@ -4,7 +4,7 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { IUserService } from './interface.user';
+import { IUserService } from './user.interface';
 import { CreateUser, FindUser } from '../utils/types';
 import { Helpers } from 'src/utils/helpers';
 import { UserRepository } from './user.repository';
@@ -15,7 +15,9 @@ export class UserService implements IUserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async createUser(user: CreateUser) {
-    const exitsUser = await this.userRepository.findOne({ email: user.email });
+    const exitsUser = await this.userRepository.findOneBy({
+      email: user.email,
+    });
     if (exitsUser) {
       throw new HttpException('user already exists', HttpStatus.CONFLICT);
     }
@@ -25,6 +27,10 @@ export class UserService implements IUserService {
   }
 
   async findUser(findUser: FindUser): Promise<User> {
-    return this.userRepository.findOne(findUser);
+    return this.userRepository.findOne(findUser, ['participant']);
+  }
+
+  async saveUser(user: User): Promise<User> {
+    return await this.userRepository.saveUser(user);
   }
 }

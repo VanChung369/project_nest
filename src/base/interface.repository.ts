@@ -1,10 +1,11 @@
-import { EntityId } from 'typeorm/repository/EntityId';
-import { DeepPartial, DeleteResult, ObjectLiteral } from 'typeorm';
+import { DeepPartial, ObjectLiteral } from 'typeorm';
 
 export interface IBaseService<T> {
   create(doc: any, object?: any): Promise<any>;
 
   findById(id: number): Promise<T>;
+
+  findOneBy(object: object): Promise<T>;
 
   findOne(object: object): Promise<T>;
 

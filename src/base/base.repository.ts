@@ -13,17 +13,31 @@ export class BaseRepository<T extends BaseEntity, R extends Repository<T>>
 {
   constructor(@InjectRepository(Repository<T>) protected readonly repo: R) {}
 
-  async create(doc: any, object?: any): Promise<any> {
+  async create(doc?: any, object?: any): Promise<any> {
     const newdoc = this.repo.create(object);
-    return await this.repo.save(newdoc);
+    return await (doc ? this.repo.save(doc) : this.repo.save(newdoc));
   }
 
   async findById(id: number): Promise<T> {
     return this.repo.findOneBy({ id } as FindOptionsWhere<T>);
   }
 
-  async findOne(object: object): Promise<T> {
+  async findOneBy(object: object): Promise<T> {
     return this.repo.findOneBy(object);
+  }
+
+  async findOne(
+    object: object,
+    relations?: string[],
+    options?: any,
+  ): Promise<T> {
+    return this.repo.findOne({
+      where: {
+        ...object,
+      },
+      relations: relations,
+      select: options,
+    });
   }
 
   findAll(): Promise<T[] | null> {
