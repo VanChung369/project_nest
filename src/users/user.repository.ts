@@ -11,4 +11,8 @@ export class UserRepository extends BaseRepository<User, Repository<User>> {
   ) {
     super(userRepository);
   }
+
+  async saveUser(user: User) {
+    return await this.userRepository.save(user);
+  }
 }

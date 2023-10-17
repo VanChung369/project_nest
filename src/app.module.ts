@@ -8,6 +8,8 @@ import { UserModule } from './users/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { mysqlDataSource } from './schemas';
 import { PassportModule } from '@nestjs/passport';
+import { ConversationModule } from './conversations/conversation.module';
+import { ParticipantsModule } from './participants/participants.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { PassportModule } from '@nestjs/passport';
     }),
     AuthModule,
     UserModule,
+    ConversationModule,
+    ParticipantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
