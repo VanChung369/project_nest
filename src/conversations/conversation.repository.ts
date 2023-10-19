@@ -15,4 +15,42 @@ export class ConversationRepository extends BaseRepository<
   ) {
     super(conversationRepository);
   }
+
+  async isCreatedConversation(userId: number, recipientId: number) {
+    return this.conversationRepository.findOne({
+      where: [
+        {
+          creator: { id: userId },
+          recipient: { id: recipientId },
+        },
+        {
+          creator: { id: recipientId },
+          recipient: { id: userId },
+        },
+      ],
+    });
+  }
+
+  async getConversations(id: number) {
+    return this.conversationRepository
+      .createQueryBuilder('conversation')
+      .leftJoin('conversation.creator', 'creator')
+      .addSelect([
+        'creator.id',
+        'creator.firstName',
+        'creator.lastName',
+        'creator.email',
+      ])
+      .leftJoin('conversation.recipient', 'recipient')
+      .addSelect([
+        'recipient.id',
+        'recipient.firstName',
+        'recipient.lastName',
+        'recipient.email',
+      ])
+      .where('creator.id', { id })
+      .orWhere('recipient.id', { id })
+      .orderBy('conversation.id', 'DESC')
+      .getMany();
+  }
 }

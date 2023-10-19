@@ -9,7 +9,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { mysqlDataSource } from './schemas';
 import { PassportModule } from '@nestjs/passport';
 import { ConversationModule } from './conversations/conversation.module';
-import { ParticipantsModule } from './participants/participants.module';
 
 @Module({
   imports: [
@@ -29,7 +28,6 @@ import { ParticipantsModule } from './participants/participants.module';
     AuthModule,
     UserModule,
     ConversationModule,
-    ParticipantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

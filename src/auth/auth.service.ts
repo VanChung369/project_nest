@@ -19,6 +19,6 @@ export class AuthService implements IAuthService {
       loginUser.password,
       user.password,
     );
-    return validPassword;
+    return validPassword ? user : null;
   }
 }
