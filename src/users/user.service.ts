@@ -23,11 +23,11 @@ export class UserService implements IUserService {
     }
 
     const password = await Helpers.encryptPassword(user.password);
-    return this.userRepository.create(user, { ...user, password });
+    return this.userRepository.create(null, { ...user, password });
   }
 
   async findUser(findUser: FindUser): Promise<User> {
-    return this.userRepository.findOne(findUser, ['participant']);
+    return this.userRepository.findOne(findUser);
   }
 
   async saveUser(user: User): Promise<User> {

@@ -1,18 +1,15 @@
-import { Participant, User } from 'src/schemas';
+import { Conversation, User } from 'src/schemas';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { IConversationService } from './conversation.interface';
 import { CreateConversationParam } from 'src/utils/types';
 import { ConversationRepository } from './conversation.repository';
 import { Services } from 'src/utils/constants';
-import { IParticipantsService } from 'src/participants/participants.interface';
 import { IUserService } from 'src/users/user.interface';
 
 @Injectable()
 export class ConversationsService implements IConversationService {
   constructor(
     private readonly conversationRepository: ConversationRepository,
-    @Inject(Services.PARTICIPANTS)
-    private readonly participantService: IParticipantsService,
     @Inject(Services.USERS)
     private readonly userService: IUserService,
   ) {}
@@ -21,49 +18,37 @@ export class ConversationsService implements IConversationService {
     user: User,
     createConversation: CreateConversationParam,
   ) {
-    const participants: Participant[] = [];
-
-    const author = await this.userService.findUser({ id: user.id });
-
-    if (!author.participant) {
-      const participant = await this.createPraticipantAndSaveUser(
-        author,
-        createConversation.authorId,
-      );
-      participants.push(participant);
-    } else {
-      participants.push(author.participant);
-    }
+    const { recipientId, message } = createConversation;
 
     const recipient = await this.userService.findUser({
-      id: createConversation.recipientId,
+      id: recipientId,
     });
 
-    if (!recipient) {
-      throw new HttpException('Recipient not found', HttpStatus.BAD_REQUEST);
-    }
+    if (!recipient) throw new HttpException('not found', HttpStatus.NOT_FOUND);
 
-    if (!recipient.participant) {
-      const participant = await this.createPraticipantAndSaveUser(
-        recipient,
-        createConversation.recipientId,
+    if (user.id === recipient.id)
+      throw new HttpException(
+        'Cannot create Conversation with yourself',
+        HttpStatus.BAD_REQUEST,
       );
-      participants.push(participant);
-    } else {
-      participants.push(recipient.participant);
-    }
-    return await this.conversationRepository.create(null, { participants });
+
+    const exists = await this.conversationRepository.isCreatedConversation(
+      user.id,
+      recipient.id,
+    );
+    if (exists) throw new HttpException('user exits', HttpStatus.CONFLICT);
+
+    return await this.conversationRepository.create(null, {
+      creator: user,
+      recipient: recipient,
+    });
   }
 
-  private async createPraticipantAndSaveUser(user: User, id: number) {
-    const newParticipant = await this.participantService.createPraticipant({
-      id,
-    });
+  async getConversations(id: number): Promise<Conversation[]> {
+    return this.conversationRepository.getConversations(id);
+  }
 
-    user.participant = newParticipant;
-
-    await this.userService.saveUser(user);
-
-    return newParticipant;
+  async findConversationById(id: number): Promise<Conversation> {
+    return this.conversationRepository.findOne({ id });
   }
 }
