@@ -27,3 +27,9 @@ export type ConversationIndentityType = 'author' | 'recipient';
 export interface AuthenticateRequest extends Request {
   user: User;
 }
+
+export type CreateMessageParam = {
+  conversationId: number;
+  content: string;
+  user: User;
+};

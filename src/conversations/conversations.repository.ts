@@ -5,7 +5,7 @@ import { Conversation } from 'src/schemas';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class ConversationRepository extends BaseRepository<
+export class ConversationsRepository extends BaseRepository<
   Conversation,
   Repository<Conversation>
 > {

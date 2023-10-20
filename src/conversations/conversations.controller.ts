@@ -5,15 +5,17 @@ import {
   Inject,
   Param,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthenticateGuard } from 'src/auth/roles.guard';
 import { Routes, Services } from 'src/utils/constants';
-import { IConversationService } from './conversation.interface';
+import { IConversationService } from './conversations.interface';
 import { CerateConversationDto } from './dto/create-conversation.dto';
 import { User } from 'src/schemas';
 import { AuthUser } from 'src/utils/decorators';
 import { instanceToPlain } from 'class-transformer';
+import { Response } from 'express';
 
 @Controller(Routes.CONVERSATIONS)
 @UseGuards(AuthenticateGuard)
@@ -34,8 +36,10 @@ export class ConversationsController {
   }
 
   @Get()
-  getConversations(@AuthUser() user: User) {
-    return this.conversationService.getConversations(user.id);
+  async getConversations(@AuthUser() user: User, @Res() res: Response) {
+    return res.send({
+      data: await this.conversationService.getConversations(user.id),
+    });
   }
 
   @Get(':id')
