@@ -1,15 +1,15 @@
 import { Conversation, User } from 'src/schemas';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { IConversationService } from './conversation.interface';
+import { IConversationService } from './conversations.interface';
 import { CreateConversationParam } from 'src/utils/types';
-import { ConversationRepository } from './conversation.repository';
+import { ConversationsRepository } from './conversations.repository';
 import { Services } from 'src/utils/constants';
 import { IUserService } from 'src/users/user.interface';
 
 @Injectable()
 export class ConversationsService implements IConversationService {
   constructor(
-    private readonly conversationRepository: ConversationRepository,
+    private readonly conversationRepository: ConversationsRepository,
     @Inject(Services.USERS)
     private readonly userService: IUserService,
   ) {}

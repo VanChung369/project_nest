@@ -4,7 +4,7 @@ import { ConversationsService } from './conversations.service';
 import { Services } from 'src/utils/constants';
 import { Conversation } from 'src/schemas';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConversationRepository } from './conversation.repository';
+import { ConversationsRepository } from './conversations.repository';
 import { UserModule } from 'src/users/user.module';
 
 @Module({
@@ -15,7 +15,8 @@ import { UserModule } from 'src/users/user.module';
       provide: Services.CONVERSATIONS,
       useClass: ConversationsService,
     },
-    ConversationRepository,
+    ConversationsRepository,
   ],
+  exports: [ConversationsRepository],
 })
-export class ConversationModule {}
+export class ConversationsModule {}
