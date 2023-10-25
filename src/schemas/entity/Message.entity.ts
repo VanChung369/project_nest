@@ -5,7 +5,7 @@ import { Conversation } from './Conversation.entity';
 
 @Entity({ name: 'messages' })
 export class Message extends BaseEntity {
-  @Column()
+  @Column('text')
   content: string;
 
   @ManyToOne(() => User, (user) => user.message)

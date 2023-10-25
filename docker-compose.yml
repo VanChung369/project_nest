@@ -1,35 +1,31 @@
 version: '3.8'
 
 services:
-    redis-db:
-        image: redis:latest
-        restart: always
-        container_name: redis-db
-        environment:
-            REDIS_HOST: redis-db
-        ports:
-            - ${REDIS_PORT:-6379}:6379
-        command: 'redis-server --save 20 1 --loglevel warning'
-        volumes: 
-            - cache-redis:/data
-    
-    mysql-db:
-        image: mysql
-        container_name: mysql-db
-        restart: always
-        environment:
-            - MYSQL_DATABASE=${TYPEORM_DATABASE:-chat}
-            - MYSQL_PASSWORD=${TYPEORM_PASSWORD:-secret}
-            - MYSQL_ROOT_PASSWORD=${TYPEORM_PASSWORD:-secret}
-        ports:
-            - ${DB_PORT:-13308}:3306
-        command: --default-authentication-plugin=mysql_native_password
-        volumes:
-            - db-store:/var/lib/mysql
-            - ./my.cnf:/etc/mysql/conf.d/my.cnf
+  redis-db:
+    image: redis:latest
+    restart: always
+    container_name: redis-db
+    environment:
+      REDIS_HOST: redis-db
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    command: 'redis-server --save 20 1 --loglevel warning'
+    volumes:
+      - cache-redis:/data
 
+  mysql-db:
+    image: mysql
+    container_name: mysql-db
+    restart: always
+    environment:
+      - MYSQL_DATABASE=${TYPEORM_DATABASE:-chat}
+      - MYSQL_PASSWORD=${TYPEORM_PASSWORD:-secret}
+      - MYSQL_ROOT_PASSWORD=${TYPEORM_PASSWORD:-secret}
+    ports:
+      - ${DB_PORT:-13308}:3306
+    command: --default-authentication-plugin=mysql_native_password
 volumes:
-    db-store:
-        driver: local
-    cache-redis:
-        driver: local
+  db-store:
+    driver: local
+  cache-redis:
+    driver: local

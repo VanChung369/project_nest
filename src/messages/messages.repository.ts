@@ -15,4 +15,14 @@ export class MessageRepository extends BaseRepository<
   ) {
     super(messageRepository);
   }
+
+  findMessageConversation(conversationId: number) {
+    return this.messageRepository.find({
+      where: { conversation: { id: conversationId } },
+      order: {
+        createAt: 'DESC',
+      },
+      relations: ['author'],
+    });
+  }
 }

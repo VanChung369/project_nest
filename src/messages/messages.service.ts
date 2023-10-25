@@ -34,10 +34,19 @@ export class MessagesService implements IMessageService {
       );
     }
 
-    return await this.messageRepository.create({
+    const saveMessage = await this.messageRepository.create(null, {
       content: createMessage.content,
       conversation,
       author: createMessage.user,
     });
+
+    conversation.lastMessageSent = saveMessage;
+
+    await this.conversationRepository.create(conversation);
+    return;
+  }
+
+  getMessageConversationById(conversationId: number): Promise<Message[]> {
+    return this.messageRepository.findMessageConversation(conversationId);
   }
 }
