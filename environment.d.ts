@@ -6,5 +6,6 @@ declare namespace NodeJS {
     TYPEORM_PASSWORD?: string;
     TYPEORM_DATABASE?: string;
     TYPEORM_PORT?: number;
+    REDIS_HOST?: string;
   }
 }
