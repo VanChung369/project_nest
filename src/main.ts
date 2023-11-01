@@ -7,6 +7,12 @@ import * as passport from 'passport';
 import { TypeormStore } from 'connect-typeorm';
 import { Session, mysqlDataSource } from './schemas';
 import 'dotenv/config';
+import {
+  createProxyMiddleware,
+  Filter,
+  Options,
+  RequestHandler,
+} from 'http-proxy-middleware';
 
 async function bootstrap() {
   const { PORT, COOKIE_SECRET } = process.env;
@@ -16,6 +22,13 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api');
+  // app.use(
+  //   'api',
+  //   createProxyMiddleware({
+  //     target: 'http://www.example.org',
+  //     changeOrigin: true,
+  //   }),
+  // );
   app.useGlobalPipes(new ValidationPipe());
   app.use(
     session({
@@ -32,6 +45,11 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // Uncomment these lines to use the Redis adapter:
+  // const redisIoAdapter = new RedisIoAdapter(app);
+  // await redisIoAdapter.connectToRedis();
+  // app.useWebSocketAdapter(redisIoAdapter);
 
   try {
     await app.listen(PORT, () => console.log(`listening on ${PORT}`));

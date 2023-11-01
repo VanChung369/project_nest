@@ -43,7 +43,7 @@ export class MessagesService implements IMessageService {
     conversation.lastMessageSent = saveMessage;
 
     await this.conversationRepository.create(conversation);
-    return;
+    return saveMessage;
   }
 
   getMessageConversationById(conversationId: number): Promise<Message[]> {

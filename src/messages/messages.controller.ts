@@ -14,21 +14,25 @@ import { AuthUser } from 'src/utils/decorators';
 import { User } from 'src/schemas';
 import { instanceToPlain } from 'class-transformer';
 import { Response } from 'express';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Controller(Routes.MESSAGES)
 export class MessagesController {
   constructor(
     @Inject(Services.MESSAGES) private readonly messageService: IMessageService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   @Post()
-  createMessage(
+  async createMessage(
     @AuthUser() user: User,
     @Body() createMessage: CreateMessageDto,
   ) {
-    return instanceToPlain(
+    const mgs = await instanceToPlain(
       this.messageService.createMessage({ ...createMessage, user }),
     );
+    this.eventEmitter.emit('message.create', mgs);
+    return;
   }
 
   @Get(':id')
