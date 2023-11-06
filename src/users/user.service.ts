@@ -5,7 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { IUserService } from './user.interface';
-import { CreateUser, FindUser } from '../utils/types';
+import { CreateUser, FindUser, FindUserByName } from '../utils/types';
 import { Helpers } from 'src/utils/helpers';
 import { UserRepository } from './user.repository';
 import { User } from 'src/schemas';
@@ -27,6 +27,10 @@ export class UserService implements IUserService {
   }
 
   async findUser(findUser: FindUser): Promise<User> {
+    return this.userRepository.findOne(findUser);
+  }
+
+  async findUserByName(findUser: FindUserByName): Promise<User> {
     return this.userRepository.findOne(findUser);
   }
 

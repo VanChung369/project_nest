@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class CerateConversationDto {
-  @IsNumber()
   @IsNotEmpty()
-  recipientId: number;
+  @IsString()
+  username: string;
 
   @IsNotEmpty()
   @IsString()

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { IMessageService } from './message.interface';
 import { Message } from 'src/schemas';
-import { CreateMessageParam } from 'src/utils/types';
+import { CreateMessageParam, DeleteMessageParam } from 'src/utils/types';
 import { MessageRepository } from './messages.repository';
 import { ConversationsRepository } from 'src/conversations/conversations.repository';
 
@@ -48,5 +48,9 @@ export class MessagesService implements IMessageService {
 
   getMessageConversationById(conversationId: number): Promise<Message[]> {
     return this.messageRepository.findMessageConversation(conversationId);
+  }
+
+  deleteMessageConversationById(params: DeleteMessageParam) {
+    return;
   }
 }
