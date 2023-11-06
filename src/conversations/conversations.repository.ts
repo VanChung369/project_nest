@@ -34,22 +34,11 @@ export class ConversationsRepository extends BaseRepository<
   async getConversations(id: number) {
     return this.conversationRepository
       .createQueryBuilder('conversation')
-      .leftJoin('conversation.creator', 'creator')
-      .addSelect([
-        'creator.id',
-        'creator.firstName',
-        'creator.lastName',
-        'creator.email',
-      ])
-      .leftJoin('conversation.recipient', 'recipient')
-      .addSelect([
-        'recipient.id',
-        'recipient.firstName',
-        'recipient.lastName',
-        'recipient.email',
-      ])
-      .where('creator.id', { id })
-      .orWhere('recipient.id', { id })
+      .leftJoinAndSelect('conversation.creator', 'creator')
+      .leftJoinAndSelect('conversation.recipient', 'recipient')
+      .leftJoinAndSelect('conversation.lastMessageSent', 'lastMessageSent')
+      .where('creator.id = :id', { id })
+      .orWhere('recipient.id = :id', { id })
       .orderBy('conversation.id', 'DESC')
       .getMany();
   }

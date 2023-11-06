@@ -19,7 +19,7 @@ export class WebSocket implements OnGatewayConnection {
     client.emit('connected', { status: 'ok' });
   }
   @WebSocketServer()
-  servver: Server;
+  server: Server;
 
   @SubscribeMessage('createMessage')
   handleCreateMessage(@MessageBody() data: any) {
@@ -27,7 +27,12 @@ export class WebSocket implements OnGatewayConnection {
   }
 
   @OnEvent('message.create')
-  handleOrderCreatedEvent(payload: any) {
-    this.servver.emit('onMessage', payload);
+  handleMessageCreateEvent(payload: any) {
+    this.server.emit('onMessage', payload);
+  }
+
+  @OnEvent('conversation.create')
+  handleConversationCreateEvent(payload: any) {
+    this.server.emit('onConversation', payload);
   }
 }

@@ -16,6 +16,7 @@ import { User } from 'src/schemas';
 import { AuthUser } from 'src/utils/decorators';
 import { instanceToPlain } from 'class-transformer';
 import { Response } from 'express';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Controller(Routes.CONVERSATIONS)
 @UseGuards(AuthenticateGuard)
@@ -23,6 +24,7 @@ export class ConversationsController {
   constructor(
     @Inject(Services.CONVERSATIONS)
     private readonly conversationService: IConversationService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   @Post()
@@ -30,9 +32,13 @@ export class ConversationsController {
     @AuthUser() user: User,
     @Body() createConversation: CerateConversationDto,
   ) {
-    return instanceToPlain(
+    const conversation = instanceToPlain(
       this.conversationService.createConversation(user, createConversation),
     );
+
+    this.eventEmitter.emit('conversation.create', conversation);
+
+    return conversation;
   }
 
   @Get()

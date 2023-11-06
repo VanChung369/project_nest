@@ -18,10 +18,10 @@ export class ConversationsService implements IConversationService {
     user: User,
     createConversation: CreateConversationParam,
   ) {
-    const { recipientId, message } = createConversation;
+    const { username, message } = createConversation;
 
-    const recipient = await this.userService.findUser({
-      id: recipientId,
+    const recipient = await this.userService.findUserByName({
+      lastName: username,
     });
 
     if (!recipient) throw new HttpException('not found', HttpStatus.NOT_FOUND);

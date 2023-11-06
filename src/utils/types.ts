@@ -17,8 +17,12 @@ export type FindUser = Partial<{
   email?: string;
 }>;
 
+export type FindUserByName = Partial<{
+  lastName?: string;
+}>;
+
 export type CreateConversationParam = {
-  recipientId: number;
+  username: string;
   message: string;
 };
 
@@ -32,4 +36,10 @@ export type CreateMessageParam = {
   conversationId: number;
   content: string;
   user: User;
+};
+
+export type DeleteMessageParam = {
+  userId: number;
+  conversationId: number;
+  messageId: number;
 };

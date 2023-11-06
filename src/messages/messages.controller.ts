@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
+  ParseIntPipe,
   Post,
   Res,
 } from '@nestjs/common';
@@ -27,18 +29,21 @@ export class MessagesController {
   async createMessage(
     @AuthUser() user: User,
     @Body() createMessage: CreateMessageDto,
+    @Res() res: Response,
   ) {
     const mgs = await instanceToPlain(
       this.messageService.createMessage({ ...createMessage, user }),
     );
     this.eventEmitter.emit('message.create', mgs);
-    return;
+    return res.send({
+      status: 'ok',
+    });
   }
 
   @Get(':id')
   async getMessageConversationById(
     @AuthUser() user: User,
-    @Param('id') conversationId: number,
+    @Param('id', ParseIntPipe) conversationId: number,
     @Res() res: Response,
   ) {
     return res.send({
@@ -47,4 +52,10 @@ export class MessagesController {
       ),
     });
   }
+
+  @Delete('id')
+  async deleteMessageConversationById(
+    @AuthUser() user: User,
+    @Param('id', ParseIntPipe) conversationId: number,
+  ) {}
 }
